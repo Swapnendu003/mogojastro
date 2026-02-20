@@ -18,33 +18,14 @@ import { motion, useAnimation, useInView } from "framer-motion";
 import { Ripple } from "@/components/ui/ripple";
 import { Button } from "@/components/ui/button";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import {
+  NAVIGATION_ITEMS,
+  HOW_IT_WORKS_STEPS,
+  HERO_PLACEHOLDERS,
+  HERO_TOPIC_CHIPS,
+} from "@/constants";
 
 
-const navigationItems = [
-  { title: "Home", href: "#" },
-  { title: "How it Works", href: "#how-it-works" },
-  { title: "Demo", href: "#demo-content" },
-];
-
-
-
-const features = [
-  {
-    step: "1",
-    label: "Ask",
-    description: "Type any topic you want to learn.",
-  },
-  {
-    step: "2",
-    label: "Learn",
-    description: "AI explains with short lessons.",
-  },
-  {
-    step: "3",
-    label: "Practice",
-    description: "Test your knowledge instantly.",
-  },
-];
 
 interface MynaHeroProps {
   onSearch: (topic: string) => void;
@@ -73,14 +54,6 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
     "FAST",
   ];
 
-  const placeholders = [
-    "React Performance Optimization",
-    "Next.js App Router",
-    "TypeScript Generics",
-    "REST vs GraphQL APIs",
-    "System Design for Web Apps",
-  ];
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -90,6 +63,11 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
     if (inputValue.trim()) {
       onSearch(inputValue);
     }
+  };
+
+  const handleChipClick = (topic: string) => {
+    setInputValue(topic);
+    onSearch(topic);
   };
 
   return (
@@ -104,11 +82,11 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
             </a>
 
             <nav className="hidden md:flex items-center space-x-8">
-              {navigationItems.map((item) => (
+              {NAVIGATION_ITEMS.map((item) => (
                 <a
                   key={item.title}
                   href={item.href}
-                  className="text-sm font-medium text-foreground hover:text-[#FF6B2C] transition-colors"
+                  className="cursor-target text-sm font-medium text-foreground hover:text-[#FF6B2C] transition-colors"
                 >
                   {item.title}
                 </a>
@@ -118,7 +96,7 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
             <div className="flex items-center space-x-4">
               <Button
                 variant="default"
-                className="rounded-none hidden md:inline-flex bg-[#FF6B2C] hover:bg-[#FF6B2C]/90"
+                className="rounded-none hidden md:inline-flex bg-[#FF6B2C] hover:bg-[#FF6B2C]/90 cursor-target"
                 onClick={() => window.open('https://swapnendu.tech', '_blank')}
               >
                 Made by SB <ArrowRight className="ml-1 w-4 h-4" />
@@ -132,11 +110,11 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
                 </SheetTrigger>
                 <SheetContent>
                   <nav className="flex flex-col gap-6 mt-6">
-                    {navigationItems.map((item) => (
+                    {NAVIGATION_ITEMS.map((item) => (
                       <a
                         key={item.title}
                         href={item.href}
-                        className="text-sm font-medium text-foreground hover:text-[#FF6B2C] transition-colors"
+                        className="cursor-target text-sm font-medium text-foreground hover:text-[#FF6B2C] transition-colors"
                       >
                         {item.title}
                       </a>
@@ -186,13 +164,34 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
                 className="mt-12 w-full max-w-xl"
               >
                 <PlaceholdersAndVanishInput
-                  placeholders={placeholders}
+                  placeholders={[...HERO_PLACEHOLDERS]}
                   onChange={handleChange}
                   onSubmit={onSubmit}
                 />
                 <p className="mt-4 text-sm text-foreground">
                   The fastest way to learn and retain web development concepts
                 </p>
+              </motion.div>
+
+              {/* Topic Chips */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.6, duration: 0.5 }}
+                className="mt-6 flex flex-wrap gap-2 justify-center"
+              >
+                {HERO_TOPIC_CHIPS.map((chip) => (
+                  <motion.button
+                    key={chip}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.94 }}
+                    onClick={() => handleChipClick(chip)}
+                    className="relative cursor-target px-3 py-1.5 text-xs font-mono font-medium border border-[#FF6B2C]/25 text-muted-foreground hover:text-[#FF6B2C] hover:border-[#FF6B2C] hover:bg-[#FF6B2C]/5 transition-all duration-200 cursor-pointer group"
+                  >
+                    {chip}
+                    <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_12px_rgba(255,107,44,0.25)] pointer-events-none" />
+                  </motion.button>
+                ))}
               </motion.div>
 
               <motion.div
@@ -235,7 +234,7 @@ export function MynaHero({ onSearch, loading }: MynaHeroProps) {
               transition={{ delay: 3.2, duration: 0.6 }}
               className="grid md:grid-cols-3 max-w-6xl mx-auto"
             >
-              {features.map((feature, index) => (
+              {HOW_IT_WORKS_STEPS.map((feature, index) => (
                 <motion.div
                   key={feature.label}
                   initial={{ opacity: 0, y: 50 }}
